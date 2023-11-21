@@ -1,0 +1,32 @@
+name: lab4
+services:
+  nginx:
+    image: "nginx:1.25.3"
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./conf:/etc/nginx/conf.d
+      - ./html:/usr/share/nginx/html
+
+  flask:
+    image: "gorodetskyna/flask:1.0"
+    container_name: flask
+    environment:
+      - FLASK_DEBUG=True
+      - PYTHONUNBUFFERED=True
+    volumes:
+      - ./app:/app
+    ports:
+      - "5000:5000"
+    command: sh -c "pip install -r requirements.txt && python app.py"
+
+  postgres:
+    image: "postgres:16.1-alpine"
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: Password!
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
